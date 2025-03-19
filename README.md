@@ -13,7 +13,7 @@ int main() {
     int *x_p = arena_alloc(&a, sizeof(int));
     *x_p = 10;
 
-    char *s = arena_strndup(&a, "Hello World", 11);
+    char *s = arena_strdup(&a, "Hello World");
 
     arena_free(&a);
     return 0;
