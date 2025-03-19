@@ -21,6 +21,8 @@ void arena_free(Arena *a);
 
 void *arena_alloc(Arena *a, size_t size_bytes);
 
+char *arena_strdup(Arena *a, const char *cstr);
+
 char *arena_strndup(Arena *a, const char *str, size_t len);
 
 char *arena_format(Arena *a, const char *fmt, ...);

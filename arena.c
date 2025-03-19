@@ -59,6 +59,15 @@ void *arena_alloc(Arena *a, size_t size_bytes) {
     return p;
 }
 
+char *arena_strdup(Arena *a, const char *cstr) {
+    size_t len = strlen(cstr);
+    char *s = arena_alloc(a, len + 1);
+    memcpy(s, cstr, len);
+    s[len] = '\0';
+
+    return s;
+}
+
 char *arena_strndup(Arena *a, const char *str, size_t len) {
     char *s = arena_alloc(a, len + 1);
     memcpy(s, str, len);
