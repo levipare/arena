@@ -6,25 +6,25 @@
 
 #define DEFAULT_REGION_SIZE 4096
 
-typedef struct Region {
-    struct Region *next;
+struct region {
+    struct region *next;
     size_t index;
     size_t count;
     uintptr_t data[];
-} Region;
+};
 
-typedef struct Arena {
-    Region *head;
-} Arena;
+struct arena {
+    struct region *head;
+};
 
-void arena_free(Arena *a);
+void arena_free(struct arena *a);
 
-void *arena_alloc(Arena *a, size_t size_bytes);
+void *arena_alloc(struct arena *a, size_t size_bytes);
 
-char *arena_strdup(Arena *a, const char *cstr);
+char *arena_strdup(struct arena *a, const char *cstr);
 
-char *arena_strndup(Arena *a, const char *str, size_t len);
+char *arena_strndup(struct arena *a, const char *str, size_t len);
 
-char *arena_format(Arena *a, const char *fmt, ...);
+char *arena_format(struct arena *a, const char *fmt, ...);
 
 #endif

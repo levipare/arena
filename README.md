@@ -8,7 +8,7 @@ functions to use in tandem with arena allocators.
 #include "arena.h"
 
 int main() {
-    Arena a = {0};
+    struct arena a = {0};
 
     int *x_p = arena_alloc(&a, sizeof(int));
     *x_p = 10;

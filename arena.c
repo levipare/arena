@@ -7,14 +7,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-static Region *region_new(size_t size_bytes) {
+static struct region *region_new(size_t size_bytes) {
     // how many words are required to fit size_bytes
     size_t count = (size_bytes + sizeof(uintptr_t) - 1) / sizeof(uintptr_t);
 
     // byte size of region
-    size_t size = sizeof(Region) + count * sizeof(uintptr_t);
+    size_t size = sizeof(struct region) + count * sizeof(uintptr_t);
 
-    Region *r = malloc(size); // TODO: USE MMAP
+    struct region *r = malloc(size); // TODO: USE MMAP
     r->next = NULL;
     r->index = 0;
     r->count = count;
@@ -22,16 +22,16 @@ static Region *region_new(size_t size_bytes) {
     return r;
 }
 
-void arena_free(Arena *a) {
-    Region *r = a->head;
+void arena_free(struct arena *a) {
+    struct region *r = a->head;
     while (r) {
-        Region *tmp = r;
+        struct region *tmp = r;
         r = r->next;
         free(tmp);
     }
 }
 
-void *arena_alloc(Arena *a, size_t size_bytes) {
+void *arena_alloc(struct arena *a, size_t size_bytes) {
     // equivalent to ceil(size_bytes / sizeof(uintptr_t))
     size_t count = (size_bytes + sizeof(uintptr_t) - 1) / sizeof(uintptr_t);
 
@@ -44,7 +44,7 @@ void *arena_alloc(Arena *a, size_t size_bytes) {
         a->head = region_new(region_size);
     }
 
-    Region *r = a->head;
+    struct region *r = a->head;
     while (r->index + count > r->count && r->next) {
         r = r->next;
     }
@@ -59,7 +59,7 @@ void *arena_alloc(Arena *a, size_t size_bytes) {
     return p;
 }
 
-char *arena_strdup(Arena *a, const char *cstr) {
+char *arena_strdup(struct arena *a, const char *cstr) {
     size_t len = strlen(cstr);
     char *s = arena_alloc(a, len + 1);
     memcpy(s, cstr, len);
@@ -68,7 +68,7 @@ char *arena_strdup(Arena *a, const char *cstr) {
     return s;
 }
 
-char *arena_strndup(Arena *a, const char *str, size_t len) {
+char *arena_strndup(struct arena *a, const char *str, size_t len) {
     char *s = arena_alloc(a, len + 1);
     memcpy(s, str, len);
     s[len] = '\0';
@@ -76,7 +76,7 @@ char *arena_strndup(Arena *a, const char *str, size_t len) {
     return s;
 }
 
-char *arena_format(Arena *a, const char *fmt, ...) {
+char *arena_format(struct arena *a, const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     int size = vsnprintf(NULL, 0, fmt, args);
