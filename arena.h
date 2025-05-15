@@ -23,7 +23,7 @@ void *arena_alloc(struct arena *a, size_t size_bytes);
 
 char *arena_strdup(struct arena *a, const char *cstr);
 
-char *arena_strndup(struct arena *a, const char *str, size_t len);
+char *arena_strndup(struct arena *a, const char *cstr, size_t len);
 
 char *arena_format(struct arena *a, const char *fmt, ...);
 

@@ -68,9 +68,10 @@ char *arena_strdup(struct arena *a, const char *cstr) {
     return s;
 }
 
-char *arena_strndup(struct arena *a, const char *str, size_t len) {
+char *arena_strndup(struct arena *a, const char *cstr, size_t n) {
+    size_t len = strnlen(cstr, n);
     char *s = arena_alloc(a, len + 1);
-    memcpy(s, str, len);
+    memcpy(s, cstr, len);
     s[len] = '\0';
 
     return s;
